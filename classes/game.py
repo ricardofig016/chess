@@ -296,9 +296,9 @@ class Game(object):
         return valid_moves
 
     def get_valid_moves_queen(self, row, col):
-        piece = self.matrix[row][col].piece
-        valid_moves = []
-        return valid_moves
+        valid_rook = self.get_valid_moves_rook(row, col)
+        valid_bishop = self.get_valid_moves_bishop(row, col)
+        return valid_rook + valid_bishop
 
     def get_valid_moves_rook(self, row, col):
         piece = self.matrix[row][col].piece
