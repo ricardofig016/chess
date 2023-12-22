@@ -7,6 +7,7 @@ class Game(object):
         self.matrix = []
         self.populate()
         self.turn = "white"
+        self.history = []
 
     def populate(self):
         w = "white"
