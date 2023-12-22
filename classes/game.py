@@ -243,6 +243,58 @@ class Game(object):
     def get_valid_moves_rook(self, row, col):
         piece = self.matrix[row][col].piece
         valid_moves = []
+        prev_row = row - 1
+        next_row = row + 1
+        prev_col = col - 1
+        next_col = col + 1
+        # valid cells upwards
+        while prev_row >= 0:
+            curr_piece = self.matrix[prev_row][col].piece
+            if curr_piece:
+                if curr_piece.color == piece.color:
+                    break
+                else:
+                    valid_moves.append([prev_row, col])
+                    break
+            else:
+                valid_moves.append([prev_row, col])
+            prev_row -= 1
+        # valid cells downwards
+        while next_row < 8:
+            curr_piece = self.matrix[next_row][col].piece
+            if curr_piece:
+                if curr_piece.color == piece.color:
+                    break
+                else:
+                    valid_moves.append([next_row, col])
+                    break
+            else:
+                valid_moves.append([next_row, col])
+            next_row += 1
+        # valid cells to the left
+        while prev_col >= 0:
+            curr_piece = self.matrix[row][prev_col].piece
+            if curr_piece:
+                if curr_piece.color == piece.color:
+                    break
+                else:
+                    valid_moves.append([row, prev_col])
+                    break
+            else:
+                valid_moves.append([row, prev_col])
+            prev_col -= 1
+        # valid cells to the right
+        while next_col < 8:
+            curr_piece = self.matrix[row][next_col].piece
+            if curr_piece:
+                if curr_piece.color == piece.color:
+                    break
+                else:
+                    valid_moves.append([row, next_col])
+                    break
+            else:
+                valid_moves.append([row, next_col])
+            next_col += 1
         return valid_moves
 
     def get_valid_moves(self, row, col):
