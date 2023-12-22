@@ -2,10 +2,11 @@ from classes.cell import Cell
 from classes.piece import Piece
 
 
-class Board(object):
+class Game(object):
     def __init__(self) -> None:
         self.matrix = []
         self.populate()
+        self.turn = "white"
 
     def populate(self):
         w = "white"
@@ -45,11 +46,41 @@ class Board(object):
             ]
         )
 
-    def validMoves(self, x, y):
-        moves = []
-        if self.matrix[x][y].piece:
+    def validMoves(self, row, col):
+        piece = self.matrix[row][col].piece
+        if not piece:
+            return []
+        name = piece.name
+        color = piece.color
+        moves = [[row, col] for row in range(8) for col in range(8)]
+        valid_moves = []
+        if name == "bishop":
+            for move in moves:
+                if abs(move[0] - row) == abs(move[1] - col):
+                    valid_moves.append(move)
+        elif name == "king":
             pass
-        return moves
+        elif name == "knight":
+            pass
+        elif name == "pawn":
+            pass
+        elif name == "queen":
+            pass
+        elif name == "rook":
+            pass
+        return valid_moves
+
+    def move(self, s_row, s_col, f_row, f_col):
+        piece = self.matrix[s_row][s_col].piece
+        self.matrix[s_row][s_col].clear()
+        self.matrix[f_row][f_col].fill(piece)
+        self.flip_turn()
+        print(f"game: moved {piece} from [{s_row},{s_col}] to [{f_row},{f_col}]")
+        return
+
+    def flip_turn(self):
+        self.turn = "black" if self.turn == "white" else "white"
+        return
 
     def __str__(self) -> str:
         s = ""
