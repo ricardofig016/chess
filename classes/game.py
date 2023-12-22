@@ -48,13 +48,147 @@ class Game(object):
         )
 
     def get_valid_moves_bishop(self, row, col):
-        return
+        piece = self.matrix[row][col].piece
+        valid_moves = []
+        return valid_moves
 
     def get_valid_moves_king(self, row, col):
-        return
+        piece = self.matrix[row][col].piece
+        valid_moves = []
+        if (
+            row - 1 >= 0
+            and col - 1 >= 0
+            and (
+                not self.matrix[row - 1][col - 1].piece
+                or self.matrix[row - 1][col - 1].piece.color != piece.color
+            )
+        ):
+            valid_moves.append([row - 1, col - 1])
+        if row - 1 >= 0 and (
+            not self.matrix[row - 1][col].piece
+            or self.matrix[row - 1][col].piece.color != piece.color
+        ):
+            valid_moves.append([row - 1, col])
+        if (
+            row - 1 >= 0
+            and col + 1 < 8
+            and (
+                not self.matrix[row - 1][col + 1].piece
+                or self.matrix[row - 1][col + 1].piece.color != piece.color
+            )
+        ):
+            valid_moves.append([row - 1, col + 1])
+        if col - 1 >= 0 and (
+            not self.matrix[row][col - 1].piece
+            or self.matrix[row][col - 1].piece.color != piece.color
+        ):
+            valid_moves.append([row, col - 1])
+        if col + 1 < 8 and (
+            not self.matrix[row][col + 1].piece
+            or self.matrix[row][col + 1].piece.color != piece.color
+        ):
+            valid_moves.append([row, col + 1])
+        if (
+            row + 1 < 8
+            and col - 1 >= 0
+            and (
+                not self.matrix[row + 1][col - 1].piece
+                or self.matrix[row + 1][col - 1].piece.color != piece.color
+            )
+        ):
+            valid_moves.append([row + 1, col - 1])
+        if row + 1 < 8 and (
+            not self.matrix[row + 1][col].piece
+            or self.matrix[row + 1][col].piece.color != piece.color
+        ):
+            valid_moves.append([row + 1, col])
+        if (
+            row + 1 < 8
+            and col + 1 < 8
+            and (
+                not self.matrix[row + 1][col + 1].piece
+                or self.matrix[row + 1][col + 1].piece.color != piece.color
+            )
+        ):
+            valid_moves.append([row + 1, col + 1])
+        return valid_moves
 
     def get_valid_moves_knight(self, row, col):
-        return
+        piece = self.matrix[row][col].piece
+        valid_moves = []
+        if (
+            row - 2 >= 0
+            and col - 1 >= 0
+            and (
+                not self.matrix[row - 2][col - 1].piece
+                or self.matrix[row - 2][col - 1].piece.color != piece.color
+            )
+        ):
+            valid_moves.append([row - 2, col - 1])
+        if (
+            row - 2 >= 0
+            and col + 1 < 8
+            and (
+                not self.matrix[row - 2][col + 1].piece
+                or self.matrix[row - 2][col + 1].piece.color != piece.color
+            )
+        ):
+            valid_moves.append([row - 2, col + 1])
+        if (
+            row - 1 >= 0
+            and col - 2 >= 0
+            and (
+                not self.matrix[row - 1][col - 2].piece
+                or self.matrix[row - 1][col - 2].piece.color != piece.color
+            )
+        ):
+            valid_moves.append([row - 1, col - 2])
+        if (
+            row - 1 >= 0
+            and col + 2 < 8
+            and (
+                not self.matrix[row - 1][col + 2].piece
+                or self.matrix[row - 1][col + 2].piece.color != piece.color
+            )
+        ):
+            valid_moves.append([row - 1, col + 2])
+        if (
+            row + 2 < 8
+            and col - 1 >= 0
+            and (
+                not self.matrix[row + 2][col - 1].piece
+                or self.matrix[row + 2][col - 1].piece.color != piece.color
+            )
+        ):
+            valid_moves.append([row + 2, col - 1])
+        if (
+            row + 2 < 8
+            and col + 1 < 8
+            and (
+                not self.matrix[row + 2][col + 1].piece
+                or self.matrix[row + 2][col + 1].piece.color != piece.color
+            )
+        ):
+            valid_moves.append([row + 2, col + 1])
+        if (
+            row + 1 < 8
+            and col - 2 >= 0
+            and (
+                not self.matrix[row + 1][col - 2].piece
+                or self.matrix[row + 1][col - 2].piece.color != piece.color
+            )
+        ):
+            valid_moves.append([row + 1, col - 2])
+        if (
+            row + 1 < 8
+            and col + 2 < 8
+            and (
+                not self.matrix[row + 1][col + 2].piece
+                or self.matrix[row + 1][col + 2].piece.color != piece.color
+            )
+        ):
+            valid_moves.append([row + 1, col + 2])
+        return valid_moves
 
     def get_valid_moves_pawn(self, row, col):  # MISSING EN PASSANT LOGIC
         piece = self.matrix[row][col].piece
@@ -102,10 +236,14 @@ class Game(object):
         return valid_moves
 
     def get_valid_moves_queen(self, row, col):
-        return
+        piece = self.matrix[row][col].piece
+        valid_moves = []
+        return valid_moves
 
     def get_valid_moves_rook(self, row, col):
-        return
+        piece = self.matrix[row][col].piece
+        valid_moves = []
+        return valid_moves
 
     def get_valid_moves(self, row, col):
         piece = self.matrix[row][col].piece
