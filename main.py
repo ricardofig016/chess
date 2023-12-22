@@ -1,7 +1,7 @@
 import os, pygame, tkinter
 from classes.game import Game
 
-WIDTH = 1000  # default is 1500
+WIDTH = 1500  # default is 1500
 HEIGHT = int(WIDTH * 0.5625)
 
 ASSETS_PATH = "assets/"
@@ -9,6 +9,7 @@ ASSETS_PATH = "assets/"
 WHITE = (213, 222, 229)
 BLUE = (117, 153, 174)
 LIGHT_BLUE = (153, 218, 234)
+DARK_BLUE = (7, 35, 95)
 BLACK = (0, 0, 0)
 
 PIECES = {
@@ -101,6 +102,7 @@ def select_cell(screen, pos):
             HEIGHT * 0.125,
         ),
     )
+    return
 
 
 def highlight_valid_moves(screen, valid_moves):
@@ -112,8 +114,23 @@ def highlight_valid_moves(screen, valid_moves):
                 move[1] * HEIGHT * 0.125 + HEIGHT * 0.0625,
                 move[0] * HEIGHT * 0.125 + HEIGHT * 0.0625,
             ),
-            int(HEIGHT / 75),
+            int(HEIGHT / 50),
         )
+    return
+
+
+def highlight_check(screen, king_pos):
+    pygame.draw.rect(
+        screen,
+        DARK_BLUE,
+        (
+            king_pos[1] * HEIGHT * 0.125,
+            king_pos[0] * HEIGHT * 0.125,
+            HEIGHT * 0.125,
+            HEIGHT * 0.125,
+        ),
+        5,
+    )
     return
 
 
@@ -122,6 +139,8 @@ def window():
     phase = "select"  # select or move
     selected_cell = None
     valid_moves = None
+    is_check = False
+    king_pos = None
 
     pygame.init()
     screen = pygame.display.set_mode((WIDTH, HEIGHT))
@@ -135,6 +154,8 @@ def window():
         draw_board(screen)
         if selected_cell:
             select_cell(screen, selected_cell)
+        if is_check:
+            highlight_check(screen, king_pos)
         blit_pieces(screen, game)
         if valid_moves:
             highlight_valid_moves(screen, valid_moves)
@@ -165,6 +186,12 @@ def window():
                                 cell_pos[0],
                                 cell_pos[1],
                             )
+                            is_check = False
+                            if game.is_check():
+                                is_check = True
+                                king_pos = game.get_king_pos(game.turn)
+                                if game.is_check_mate():
+                                    pass  # IMPLEMENT CHECKMATE
                         selected_cell = None
                         valid_moves = None
                         phase = "select"

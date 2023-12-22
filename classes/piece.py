@@ -16,7 +16,7 @@ class Piece(object):
         if nm == "king":
             return "K"
         if nm == "pawn":
-            return ""
+            return "P"
         raise Exception(f"Not a valid piece name: {nm}")
 
     def __str__(self) -> str:
