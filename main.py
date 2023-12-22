@@ -171,7 +171,7 @@ def window():
                     if phase == "select":
                         if cell.piece and game.turn == cell.piece.color:
                             selected_cell = cell_pos
-                            valid_moves = game.validMoves(
+                            valid_moves = game.get_valid_moves(
                                 selected_cell[0], selected_cell[1]
                             )
                             phase = "move"
