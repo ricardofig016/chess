@@ -50,6 +50,66 @@ class Game(object):
     def get_valid_moves_bishop(self, row, col):
         piece = self.matrix[row][col].piece
         valid_moves = []
+        # valid cells up-left
+        prev_row = row - 1
+        prev_col = col - 1
+        while prev_row >= 0 and prev_col >= 0:
+            curr_piece = self.matrix[prev_row][prev_col].piece
+            if curr_piece:
+                if curr_piece.color == piece.color:
+                    break
+                else:
+                    valid_moves.append([prev_row, prev_col])
+                    break
+            else:
+                valid_moves.append([prev_row, prev_col])
+            prev_row -= 1
+            prev_col -= 1
+        # valid cells up-right
+        prev_row = row - 1
+        next_col = col + 1
+        while prev_row >= 0 and next_col < 8:
+            curr_piece = self.matrix[prev_row][next_col].piece
+            if curr_piece:
+                if curr_piece.color == piece.color:
+                    break
+                else:
+                    valid_moves.append([prev_row, next_col])
+                    break
+            else:
+                valid_moves.append([prev_row, next_col])
+            prev_row -= 1
+            next_col += 1
+        # valid cells down-left
+        next_row = row + 1
+        prev_col = col - 1
+        while next_row < 8 and prev_col >= 0:
+            curr_piece = self.matrix[next_row][prev_col].piece
+            if curr_piece:
+                if curr_piece.color == piece.color:
+                    break
+                else:
+                    valid_moves.append([next_row, prev_col])
+                    break
+            else:
+                valid_moves.append([next_row, prev_col])
+            next_row += 1
+            prev_col -= 1
+        # valid cells down-right
+        next_row = row + 1
+        next_col = col + 1
+        while next_row < 8 and next_col < 8:
+            curr_piece = self.matrix[next_row][next_col].piece
+            if curr_piece:
+                if curr_piece.color == piece.color:
+                    break
+                else:
+                    valid_moves.append([next_row, next_col])
+                    break
+            else:
+                valid_moves.append([next_row, next_col])
+            next_row += 1
+            next_col += 1
         return valid_moves
 
     def get_valid_moves_king(self, row, col):
