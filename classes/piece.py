@@ -3,20 +3,20 @@ class Piece(object):
         self.name = name
         self.color = color
 
-    def getCode(self):
+    def get_code(self):
         nm = self.name
         if nm == "rook":
-            return "r"
+            return "R"
         if nm == "knight":
-            return "n"
+            return "N"
         if nm == "bishop":
-            return "b"
+            return "B"
         if nm == "queen":
-            return "q"
+            return "Q"
         if nm == "king":
-            return "k"
+            return "K"
         if nm == "pawn":
-            return "p"
+            return ""
         raise Exception(f"Not a valid piece name: {nm}")
 
     def __str__(self) -> str:

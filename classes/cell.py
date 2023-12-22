@@ -10,5 +10,5 @@ class Cell(object):
 
     def __str__(self) -> str:
         if self.piece:
-            return self.piece.getCode()
+            return self.piece.get_code()
         return "-"
