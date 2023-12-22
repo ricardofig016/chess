@@ -1,12 +1,17 @@
+import copy
 from classes.cell import Cell
 from classes.piece import Piece
 
 
 class Game(object):
-    def __init__(self) -> None:
-        self.matrix = []
-        self.populate()
-        self.turn = "white"
+    def __init__(self, matrix=None, turn="white") -> None:
+        if matrix is None:
+            self.matrix = []
+            self.populate()
+        else:
+            self.matrix = matrix
+
+        self.turn = turn
         self.history = []
 
     def populate(self):
@@ -47,7 +52,7 @@ class Game(object):
             ]
         )
 
-    def get_valid_moves_bishop(self, row, col):
+    def get_possible_moves_bishop(self, row, col):
         piece = self.matrix[row][col].piece
         valid_moves = []
         # valid cells up-left
@@ -112,7 +117,7 @@ class Game(object):
             next_col += 1
         return valid_moves
 
-    def get_valid_moves_king(self, row, col):
+    def get_possible_moves_king(self, row, col):
         piece = self.matrix[row][col].piece
         valid_moves = []
         if (
@@ -173,7 +178,7 @@ class Game(object):
             valid_moves.append([row + 1, col + 1])
         return valid_moves
 
-    def get_valid_moves_knight(self, row, col):
+    def get_possible_moves_knight(self, row, col):
         piece = self.matrix[row][col].piece
         valid_moves = []
         if (
@@ -250,7 +255,7 @@ class Game(object):
             valid_moves.append([row + 1, col + 2])
         return valid_moves
 
-    def get_valid_moves_pawn(self, row, col):  # MISSING EN PASSANT LOGIC
+    def get_possible_moves_pawn(self, row, col):  # MISSING EN PASSANT LOGIC
         piece = self.matrix[row][col].piece
         valid_moves = []
         if piece.color == "white":
@@ -295,12 +300,12 @@ class Game(object):
                 valid_moves.append([row + 1, col - 1])
         return valid_moves
 
-    def get_valid_moves_queen(self, row, col):
-        valid_rook = self.get_valid_moves_rook(row, col)
-        valid_bishop = self.get_valid_moves_bishop(row, col)
+    def get_possible_moves_queen(self, row, col):
+        valid_rook = self.get_possible_moves_rook(row, col)
+        valid_bishop = self.get_possible_moves_bishop(row, col)
         return valid_rook + valid_bishop
 
-    def get_valid_moves_rook(self, row, col):
+    def get_possible_moves_rook(self, row, col):
         piece = self.matrix[row][col].piece
         valid_moves = []
         prev_row = row - 1
@@ -357,25 +362,36 @@ class Game(object):
             next_col += 1
         return valid_moves
 
-    def get_valid_moves(self, row, col):
+    def get_possible_moves(self, row, col):
         piece = self.matrix[row][col].piece
         if not piece:
             return []
+
         name = piece.name
-        # moves = [[row, col] for row in range(8) for col in range(8)]
         if name == "bishop":
-            return self.get_valid_moves_bishop(row, col)
+            return self.get_possible_moves_bishop(row, col)
         if name == "king":
-            return self.get_valid_moves_king(row, col)
+            return self.get_possible_moves_king(row, col)
         if name == "knight":
-            return self.get_valid_moves_knight(row, col)
+            return self.get_possible_moves_knight(row, col)
         if name == "pawn":
-            return self.get_valid_moves_pawn(row, col)
+            return self.get_possible_moves_pawn(row, col)
         if name == "queen":
-            return self.get_valid_moves_queen(row, col)
+            return self.get_possible_moves_queen(row, col)
         if name == "rook":
-            return self.get_valid_moves_rook(row, col)
+            return self.get_possible_moves_rook(row, col)
         return []
+
+    def get_valid_moves(self, row, col):
+        valid_moves = []
+        possible_moves = self.get_possible_moves(row, col)
+        for move in possible_moves:
+            sim = Game(copy.deepcopy(self.matrix), self.turn)
+            sim.move(row, col, move[0], move[1])
+            sim.flip_turn()
+            if not sim.is_check():
+                valid_moves.append(move)
+        return valid_moves
 
     def move(self, s_row, s_col, f_row, f_col):
         piece = self.matrix[s_row][s_col].piece
@@ -387,6 +403,29 @@ class Game(object):
 
     def flip_turn(self):
         self.turn = "black" if self.turn == "white" else "white"
+        return
+
+    def is_check(self):
+        # find king
+        king_pos = []
+        for row in range(8):
+            for col in range(8):
+                piece = self.matrix[row][col].piece
+                if piece and piece.color == self.turn and piece.name == "king":
+                    king_pos = [row, col]
+        # find checks
+        for row in range(8):
+            for col in range(8):
+                piece = self.matrix[row][col].piece
+                if (
+                    piece
+                    and piece.color != self.turn
+                    and king_pos in self.get_possible_moves(row, col)
+                ):
+                    return True
+        return False
+
+    def is_check_mate(self):
         return
 
     def __str__(self) -> str:
