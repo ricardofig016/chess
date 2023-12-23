@@ -191,6 +191,7 @@ def window():
                                 is_check = True
                                 king_pos = game.get_king_pos(game.turn)
                                 if game.is_check_mate():
+                                    print("CHECKMATE")
                                     pass  # IMPLEMENT CHECKMATE
                         selected_cell = None
                         valid_moves = None

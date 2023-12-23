@@ -405,15 +405,15 @@ class Game(object):
         self.turn = "black" if self.turn == "white" else "white"
         return
 
-    def is_check(self):
-        # find king
-        king_pos = []
+    def get_king_pos(self, color):
         for row in range(8):
             for col in range(8):
                 piece = self.matrix[row][col].piece
-                if piece and piece.color == self.turn and piece.name == "king":
-                    king_pos = [row, col]
-        # find checks
+                if piece and piece.color == color and piece.name == "king":
+                    return [row, col]
+
+    def is_check(self):
+        king_pos = self.get_king_pos(self.turn)
         for row in range(8):
             for col in range(8):
                 piece = self.matrix[row][col].piece
@@ -426,7 +426,17 @@ class Game(object):
         return False
 
     def is_check_mate(self):
-        return
+        # this function is only called if a check was found
+        for row in range(8):
+            for col in range(8):
+                piece = self.matrix[row][col].piece
+                if (
+                    piece
+                    and piece.color == self.turn
+                    and len(self.get_valid_moves(row, col)) > 0
+                ):
+                    return False
+        return True
 
     def __str__(self) -> str:
         s = ""
