@@ -117,7 +117,7 @@ class Game(object):
             next_col += 1
         return valid_moves
 
-    def get_possible_moves_king(self, row, col):
+    def get_possible_moves_king(self, row, col):  # MISSING CASTLES LOGIC
         piece = self.matrix[row][col].piece
         valid_moves = []
         if (
@@ -395,10 +395,11 @@ class Game(object):
 
     def move(self, s_row, s_col, f_row, f_col):
         piece = self.matrix[s_row][s_col].piece
+        move_code = [piece.color, piece.name, (s_row, s_col), (f_row, f_col)]
+        self.history.append(move_code)
         self.matrix[s_row][s_col].clear()
         self.matrix[f_row][f_col].fill(piece)
         self.flip_turn()
-        print(f"game: moved {piece} from [{s_row},{s_col}] to [{f_row},{f_col}]")
         return
 
     def flip_turn(self):
@@ -425,7 +426,7 @@ class Game(object):
                     return True
         return False
 
-    def is_check_mate(self):
+    def is_checkmate(self):
         # this function is only called if a check was found
         for row in range(8):
             for col in range(8):
@@ -437,6 +438,36 @@ class Game(object):
                 ):
                     return False
         return True
+
+    def is_stalemate(self):
+        return self.is_checkmate()
+
+    def is_dead_position(self):  # insuficient material
+        black = []
+        white = []
+        for row in range(8):
+            for col in range(8):
+                piece = self.matrix[row][col].piece
+                if piece:
+                    if piece.color == "black":
+                        black.append(piece.name)
+                    else:
+                        white.append(piece.name)
+        if len(black) == 1:
+            if len(white) == 1 or (
+                len(white) == 2 and ("bishop" in white or "knight" in white)
+            ):
+                return True
+        else:
+            if len(black) == 2 and ("bishop" in black or "knight" in black):
+                return True
+        return False
+
+    def is_draw(self):
+        # not accounting for 3 move repetition nor 50 move rule
+        if self.is_stalemate() or self.is_dead_position():
+            return True
+        return False
 
     def __str__(self) -> str:
         s = ""

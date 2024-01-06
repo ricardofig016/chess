@@ -214,8 +214,11 @@ def window():
                                 cell_pos[0],
                                 cell_pos[1],
                             )
+                            print(game.history[-1])
                             is_check = False
-                            if game.is_check():
+                            if game.is_draw():
+                                is_draw = True
+                            elif game.is_check():
                                 is_check = True
                                 king_pos = game.get_king_pos(game.turn)
                                 if game.is_checkmate():
