@@ -10,6 +10,7 @@ WHITE = (213, 222, 229)
 BLUE = (117, 153, 174)
 LIGHT_BLUE = (153, 218, 234)
 DARK_BLUE = (7, 35, 95)
+RED = (190, 17, 26)
 BLACK = (0, 0, 0)
 
 PIECES = {
@@ -134,12 +135,34 @@ def highlight_check(screen, king_pos):
     return
 
 
+def highlight_checkmate(screen, king_pos):
+    pygame.draw.rect(
+        screen,
+        RED,
+        (
+            king_pos[1] * HEIGHT * 0.125,
+            king_pos[0] * HEIGHT * 0.125,
+            HEIGHT * 0.125,
+            HEIGHT * 0.125,
+        ),
+        5,
+    )
+    return
+
+
+def handle_end_game():
+    pygame.quit()
+    window()
+
+
 def window():
     game = Game()
     phase = "select"  # select or move
     selected_cell = None
     valid_moves = None
+    is_draw = False
     is_check = False
+    is_checkmate = False
     king_pos = None
 
     pygame.init()
@@ -156,6 +179,11 @@ def window():
             select_cell(screen, selected_cell)
         if is_check:
             highlight_check(screen, king_pos)
+            if is_checkmate:
+                highlight_checkmate(screen, king_pos)
+                handle_end_game()
+        if is_draw:
+            handle_end_game()
         blit_pieces(screen, game)
         if valid_moves:
             highlight_valid_moves(screen, valid_moves)
@@ -190,9 +218,8 @@ def window():
                             if game.is_check():
                                 is_check = True
                                 king_pos = game.get_king_pos(game.turn)
-                                if game.is_check_mate():
-                                    print("CHECKMATE")
-                                    pass  # IMPLEMENT CHECKMATE
+                                if game.is_checkmate():
+                                    is_checkmate = True
                         selected_cell = None
                         valid_moves = None
                         phase = "select"
